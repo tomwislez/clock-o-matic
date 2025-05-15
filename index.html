@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Clock-o-matic</title>
+	<meta name="author" content="Tom Wislez">
+	<meta name="description" content="Clock-o-matic is a simple, customizable countdown, timer and time display tool for broadcast environments and live productions. Installable as a web app." />
+  	<meta name="keywords" content="countdown, timer, broadcast clock, digital clock, live production timer, broadcast countdown, live countdown" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+	<link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png">
+	<link rel="manifest" href="site.webmanifest">
+	<link rel="mask-icon" href="images/icons/safari-pinned-tab.svg" color="#000000">
+	<meta name="msapplication-TileColor" content="#000000">
+	<meta name="theme-color" content="#000000">
+
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="module" src="main.js"></script>
+	<script type="text/javascript" src="clockomaticscript.js"></script>
+</head>
+
+<body>
+	<div id="menu">
+		<div id="menuContainer" class="menu-container flex-container flex-container-end">
+			<div>
+				<a href="#" aria-label="open or close menu" class="flex-container">
+					<div id="menuSettings" class="menu-item menu-button"></div>
+					<div id="menuFullscreenEnable" class="menu-item menu-button"></div>
+					<div id="menuFullscreenDisable" class="menu-item menu-button hidden"></div>
+				</a>
+				<div id="menuOptions" class="hidden">
+					<a href="#" aria-label="menu options">
+						<div id="option1" class="menu-item menu-subitem">Clock</div>
+						<div id="option2" class="menu-item menu-subitem">Timer</div>
+						<div id="option3" class="menu-item menu-subitem">Countdown</div>
+						<div>‎</div>
+						<div id="option4" class="menu-item menu-subitem">Auto hide controls</div>
+						<div id="option5" class="menu-item menu-subitem">Display full clock</div>
+						<div id="option6" class="menu-item menu-subitem">Display color: RED</div>
+						<div id="option7" class="menu-item menu-subitem hidden">Use bright colors</div>
+						<div class="flex-container">
+							<div id="option8" class="menu-item menu-subitem">Size: -</div>
+							<div id="option9" class="menu-item menu-subitem">Size: +</div>
+						</div>
+					</a>
+					<div>‎</div>
+					<div class="menuFooter flex-container">
+						<div id="version" class="menuFooter-subitem"></div>
+						<a href="#"><div id="installButton" class="menuFooter-subitem menu-item hidden">Install app</div></a>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="clockpage">
+		<div id="clockContainer" class="flex-container">
+			<div id="clockElement" class="">
+			</div>
+		</div>
+		<div id="controls" class="flex-container">
+			<div id="controlBlock1" class="control-block hidden">
+				<div id="controlBlock1Text" class="control-block-item">edit hours</div>
+				<div class="control-block-item">
+					<button id="controlBlock1Top" class="control-button">+ 1</button>
+				</div>
+				<div class="control-block-item">
+					<button id="controlBlock1Bottom" class="control-button">- 1</button>
+				</div>
+
+			</div>
+			<div id="controlBlock2" class="control-block hidden">
+				<div id="controlBlock2Text" class="control-block-item">edit min</div>
+				<div class="control-block-item">
+					<button id="controlBlock2Top1" class="control-button">+ 1</button>
+					<button id="controlBlock2Top2" class="control-button">+ 10</button>
+				</div>
+				<div class="control-block-item">
+					<button id="controlBlock2Bottom1" class="control-button">- 1</button>
+					<button id="controlBlock2Bottom2" class="control-button">- 10</button>
+				</div>
+			</div>
+			<div id="controlBlock3" class="control-block hidden">
+				<div id="controlBlock3Text" class="control-block-item">edit sec</div>
+				<div class="control-block-item">
+					<button id="controlBlock3Top1" class="control-button">+ 1</button>
+					<button id="controlBlock3Top2" class="control-button">+ 10</button>
+				</div>
+				<div class="control-block-item">
+					<button id="controlBlock3Bottom1" class="control-button">- 1</button>
+					<button id="controlBlock3Bottom2" class="control-button">- 10</button>
+				</div>
+			</div>
+			<div id="controlBlock4" class="control-block hidden">
+				<div id="controlBlock4Text" class="control-block-item"></div>
+				<div class="control-block-item">
+					<button id="controlBlock4Top" class="control-button">Start</button>
+				</div>
+			</div>
+			<div id="controlBlock5" class="control-block hidden">
+				<div id="controlBlock5Text" class="control-block-item"></div>
+				<div class="control-block-item">
+					<button id="controlBlock5Top" class="control-button">Stop</button>
+				</div>
+			</div>
+			<div id="controlBlock6" class="control-block hidden">
+				<div id="controlBlock6Text" class="control-block-item"></div>
+				<div class="control-block-item">
+					<button id="controlBlock6Top" class="control-button">Reset</button>
+				</div>
+				<div class="control-block-item">
+					<button id="controlBlock6Bottom" class="control-button">Save current as default</button>
+				</div>
+				<div id="controlBlock6TextBottom" class="control-block-item"></div>
+			</div>
+						
+		</div>
+	</div>
+	
+</body>

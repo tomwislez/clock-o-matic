@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+
+
+body{
+    background-color: black;
+    color:white;
+    font-family: roboto, monospace;
+    font-weight: 900;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+a{
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /*disable highlight on touch devices*/
+}
+#menu{
+    position: absolute;
+    margin: 10px;
+}
+.menu-container{
+    width: auto;
+    align-items: end;
+    height:auto;
+    overflow: hidden;
+}
+.menu-item{
+    margin: 10px;
+    width: auto;
+    color: white;
+}
+
+.menu-subitem{
+    font-size: 18px;
+}
+
+.menu-item:hover{
+    color:lightblue;
+}
+.menu-item:active{
+    color: darkgray;
+}
+.menu-item-active{
+    color: darkgray;    
+}
+
+.flex-container{
+    display: flex;
+}
+
+.flex-container-end{
+    justify-content: end;
+    align-items: baseline;
+}
+
+.bordertest{
+    border: 1px solid white;
+}
+
+.hidden{
+    display: none;
+}
+
+#menuSettings{
+    background-image: url("./images/icons/menu.png");  
+}
+#menuSettings:hover{
+    background-image: url("./images/icons/menu-hover.png");
+}
+
+
+#menuFullscreenEnable{
+    background-image: url("./images/icons/enable-fullscreen.png");
+}
+#menuFullscreenEnable:hover{
+    background-image: url("./images/icons/enable-fullscreen-hover.png");
+}
+#menuFullscreenDisable{
+    background-image: url("./images/icons/disable-fullscreen.png");
+}
+#menuFullscreenDisable:hover{
+    background-image: url("./images/icons/disable-fullscreen-hover.png");
+}
+
+.menu-button {
+    background-size: contain;
+    background-repeat: no-repeat;
+    resize: both;
+    min-width:25px;
+    height: 25px;
+}
+
+
+
+
+.menuFooter-subitem{
+    margin: 10px;
+    width: auto;
+    color: white;
+    font-size: 10px;;
+}
+
+
+#clockContainer{
+    margin: auto;
+    height: calc(100vh - 150px);
+    width: auto;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+#clockElement{
+    font-size: calc(22vw);
+}
+.color-red{
+    color: red;
+}
+
+
+
+#controls{
+    width: auto;
+    justify-content:space-evenly;
+    flex-wrap: wrap;
+    margin: none;
+}
+
+.control-block{
+    padding: 0px 10px 0px 10px;
+}
+.control-block-item{
+    margin: 10px 0px 10px 0px;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+    font-family: roboto, monospace;
+}
+.control-button{
+    background-color: rgb(73, 73, 73);
+    color:white;
+    font-family: roboto, monospace;
+    font-weight: 900;
+    font-size: 20px;
+    min-width: 80px;
+}
+.control-button:hover{
+    color: lightblue;
+    background-color: rgb(44, 44, 44);
+}
+
+.control-button:active{
+    color:black;
+    background-color: darkgray;
+}
