@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
     //Declare global variables
-    const version = "v3.10.0"
+    const version = "v3.11.2"
     var settings;
     var clock;
     var timerPhase;
@@ -612,6 +612,7 @@ $(document).ready(function(){
 
 
 })
+
 
 
 
