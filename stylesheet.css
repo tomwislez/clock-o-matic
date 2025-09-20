@@ -91,7 +91,29 @@ a{
 }
 
 
-
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+.tooltip-text {
+    visibility: hidden;
+    width: auto;
+    white-space: nowrap;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: fixed;
+    z-index: 10;
+    top: 50;
+    left: 10px;
+    opacity: 100;
+    pointer-events: none; /* Allow clicks to pass through */
+}
+.tooltip-wrapper:hover .tooltip-text {
+    visibility: visible;
+}
 
 
 .menu-button {

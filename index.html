@@ -29,10 +29,22 @@
 		<div id="menuContainer" class="menu-container flex-container flex-container-end">
 			<div>
 				<a href="#" aria-label="open or close menu" class="flex-container">
-					<div id="menuSettings" class="menu-item menu-button"></div>
-					<div id="menuFullscreenEnable" class="menu-item menu-button"></div>
-					<div id="menuFullscreenDisable" class="menu-item menu-button hidden"></div>
-					<div id="menuOpenClockOnly" class="menu-item menu-button"></div>
+					<div class="tooltip-wrapper">
+						<div id="menuSettings" class="menu-item menu-button"></div>
+						<span class="tooltip-text">Menu</span>
+					</div>
+					<div class="tooltip-wrapper">
+						<div id="menuFullscreenEnable" class="menu-item menu-button"></div>
+						<span class="tooltip-text">Enable fullscreen</span>
+					</div>
+					<div class="tooltip-wrapper">
+						<div id="menuFullscreenDisable" class="menu-item menu-button hidden"></div>
+						<span class="tooltip-text">Disable fullscreen</span>
+					</div>
+					<div class="tooltip-wrapper">
+						<div id="menuOpenClockOnly" class="menu-item menu-button"></div>
+						<span class="tooltip-text">Open clock in second window</span>
+					</div>
 				</a>
 				<div id="menuOptions" class="hidden">
 					<a href="#" aria-label="menu options">
