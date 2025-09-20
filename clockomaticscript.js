@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
-    //Declare global variables
-    const version = "v3.11.2"
+ //Declare global variables
+    const version = "v3.11.5"
     var settings;
     var clock;
     var timerPhase;
@@ -18,6 +18,8 @@ $(document).ready(function(){
     var brightBackgroundColorsEnabled;
     var clockSize;
     var fullscreenEnabled;
+    var zeroTimer = new Date("Januari 1, 2000 00:00:00")
+    var maxTimer = new Date("Januari 1, 2000 24:00:00")
 
 
 
@@ -27,9 +29,11 @@ $(document).ready(function(){
 
     
     function storeSettings(){   //A function to store settings.
-        let settingsString = JSON.stringify(settings)
-        localStorage.setItem("settings.json", settingsString)
-        console.log("Settings saved!")
+        if (!isClockOnlyMode){
+            let settingsString = JSON.stringify(settings)
+            localStorage.setItem("settings.json", settingsString)
+            console.log("Settings saved!")
+        }
     }
 
     function loadSettings(){    //Load settings from local storage and fix issues of non existing values.
@@ -54,6 +58,9 @@ $(document).ready(function(){
             "autoHideControlsEnabled" : false,
             "brightBackgroundColorsEnabled": false,
             "clockSize": 22,
+            "countdownPhase": 0,
+            "countdownOvertime": false,
+            "showPlus": ""
         }
 
 
@@ -66,22 +73,35 @@ $(document).ready(function(){
         //DEFINE VARIABLES FROM SETTINGS, OR DEFAULT ONES FOR STARTUP.
         clock = new Date();
         timerPhase = 0; //0: Reset, 1: Start, 2: Stop
-        countdownPhase = 0; //0: Reset, 1: Start upwards, 2: Start downwards, 3: Stop
+
+        if (!isClockOnlyMode){
+            countdownPhase = 0; //0: Reset, 1: Start upwards, 2: Start downwards, 3: Stop
+            countdownOvertime = 0;
+            showPlus = "";
+        } else {
+            countdownPhase = settings.countdownPhase; //0: Reset, 1: Start upwards, 2: Start downwards, 3: Stop
+            countdownOvertime = settings.countdownOvertime;
+            showPlus = settings.showPlus;
+        }
+        
         selectedOption = settings.selectedOption;
         displayFullClock = settings.displayFullClock;
         displayClockColor = settings.displayClockColor;
         hideControls = false;
         timerDefaultClock = settings.timerDefaultClock;
         countdownDefaultClock = settings.countdownDefaultClock;
-        countdownOvertime = false;
-        showPlus = "";
+        
+        
         autoHideControlsEnabled = settings.autoHideControlsEnabled;
         brightBackgroundColorsEnabled = settings.brightBackgroundColorsEnabled;
         clockSize = settings.clockSize;
-        fullscreenEnabled = false;
+        
 
         console.log("Loaded Settings:", settings)
-        storeSettings(); //if settings are loaded, save them again in browser.
+        if (!isClockOnlyMode){
+            storeSettings() //if settings are loaded, save them again in browser.
+        };
+        updateUX(false);
     }
 
     function inactivityTimeout(){
@@ -108,7 +128,27 @@ $(document).ready(function(){
         document.onscroll = resetTimer;
     }
 
+    //detects second screen for multi screen usage.
+    function checkIfClockOnlyMode() {
+        if (window.location.hash === "#clock-only") {
+            document.body.classList.add("clock-only-mode");
+            return true;
+        } else {
+            document.body.classList.remove("clock-only-mode");
+            return false;
+        }
+    }
+
+    function enableFullScreen(fullscreen){
+        if (fullscreen){
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
     function updateUX(toggleMenu = true) {
+        console.log("selected option:", selectedOption)
         $("#controlBlock1").addClass("hidden");
         $("#controlBlock2").addClass("hidden");
         $("#controlBlock3").addClass("hidden");
@@ -206,7 +246,10 @@ $(document).ready(function(){
         if (toggleMenu){
             $("#menuOptions").toggleClass("hidden");
         }
-        updateClock(false); //only updates clock look, do not change time.
+        if (!isClockOnlyMode){
+            updateClock(false); //only updates clock look, do not change time.
+        }
+        
     };
 
     function addZero(input){
@@ -217,7 +260,6 @@ $(document).ready(function(){
             return input;
         }
     }
-
 
     function displaySettingClock(input){
         if (displayFullClock == true || selectedOption == 1) {
@@ -234,7 +276,7 @@ $(document).ready(function(){
     }
 
     function updateClock(updateTime = true){
-        if (updateTime){
+        if (updateTime && !isClockOnlyMode){
             switch (selectedOption){
                 case 1:
                     option1Clock();
@@ -251,6 +293,8 @@ $(document).ready(function(){
                     } else {
                         showPlus = "";
                     }
+                    settings.showPlus = showPlus;
+                    storeSettings();
                     break;
                 case 4:
                     //option4
@@ -259,11 +303,13 @@ $(document).ready(function(){
                     //option5
                     break;
             }
+            // Sync the clock time to localStorage (used for multi screen setup)
+            localStorage.setItem("clockTime", clock.getTime());
         }
         
 
         var clockText = showPlus + displaySettingClock(addZero(clock.getHours()) + ":" + addZero(clock.getMinutes()) + ":" ) + addZero(clock.getSeconds())
-        $("#clockElement").text(clockText); 
+        $("#clockElement").text(clockText);
     }
 
 
@@ -273,15 +319,26 @@ $(document).ready(function(){
         $("#menuOptions").toggleClass("hidden")
     });
     $("#menuFullscreenEnable").click(function(){
-        document.documentElement.requestFullscreen();
+        enableFullScreen(true);
+        fullscreenEnabled = true;
         $("#menuFullscreenEnable").addClass("hidden");
         $("#menuFullscreenDisable").removeClass("hidden");
     });
     $("#menuFullscreenDisable").click(function(){
-        document.exitFullscreen();
+        enableFullScreen(false);
+        fullscreenEnabled = false;
         $("#menuFullscreenDisable").addClass("hidden");
         $("#menuFullscreenEnable").removeClass("hidden");
     });
+
+    $("#menuOpenClockOnly").click(function() {
+    // Open the same URL with a #clock-only hashtag
+        window.open(window.location.href.split('#')[0] + '#clock-only', 'clockOnlyWindow');
+    });
+
+
+
+
     $("#clockpage").click(function(){ //catch a click outside menu to close menu
         $("#menuOptions").addClass("hidden")
     })
@@ -505,57 +562,56 @@ $(document).ready(function(){
 
 
     function option3Countdown(button = 0){
-        
         switch (button){
             case 0:
                 break; //skip this section when no button is clicked.
             case 1:
-                if ((clock.getTime() + 3600000) <= 946767599000){
+                if ((clock.getTime() + 3600000) <= maxTimer.getTime()){
                     clock = new Date(clock.getTime() + 3600000) //add 1 hour
                 }                
                 break;
             case 2:
-                if ((clock.getTime() - 3600000) >= 946681200000){
+                if ((clock.getTime() - 3600000) >= zeroTimer.getTime()){
                     clock = new Date(clock.getTime() - 3600000) //remove 1 hour
                 } 
                 break;
             case 3:
-                if ((clock.getTime() + 60000) <= 946767599000){
+                if ((clock.getTime() + 60000) <= maxTimer.getTime()){
                     clock = new Date(clock.getTime() + 60000) //add 1 minute
                 } 
                 break;
             case 4:
-                if ((clock.getTime() + 600000) <= 946767599000){
+                if ((clock.getTime() + 600000) <= maxTimer.getTime()){
                     clock = new Date(clock.getTime() + 600000) //add 10 minutes
                 } 
                 break;
             case 5:
-                if ((clock.getTime() - 60000) >= 946681200000){
+                if ((clock.getTime() - 60000) >= zeroTimer.getTime()){
                     clock = new Date(clock.getTime() - 60000) //remove 1 minute
                 } 
                 break;
             case 6:
-                if ((clock.getTime() - 600000) >= 946681200000){
+                if ((clock.getTime() - 600000) >= zeroTimer.getTime()){
                     clock = new Date(clock.getTime() - 600000) //remove 10 minutes
                 } 
                 break;
             case 7:
-                if ((clock.getTime() + 1000) <= 946767599000){
+                if ((clock.getTime() + 1000) <= maxTimer.getTime()){
                     clock = new Date(clock.getTime() + 1000) //add 1 second
                 };
                 break;
             case 8:
-                if ((clock.getTime() + 10000) <= 946767599000){
+                if ((clock.getTime() + 10000) <= maxTimer.getTime()){
                     clock = new Date(clock.getTime() + 10000) //add 10 seconds
                 };
                 break;
             case 9:
-                if ((clock.getTime() - 1000) >= 946681200000){
+                if ((clock.getTime() - 1000) >= zeroTimer.getTime()){
                     clock = new Date(clock.getTime() - 1000) //remove 1 second
                 };
                 break;
             case 10:
-                if ((clock.getTime() - 10000) >= 946681200000){
+                if ((clock.getTime() - 10000) >= zeroTimer.getTime()){
                     clock = new Date(clock.getTime() - 10000) //remove 10 seconds
                 };
                 break;
@@ -568,16 +624,23 @@ $(document).ready(function(){
                     clock = new Date(countdownDefaultClock)
                     countdownOvertime = false;
                     countdownPhase = 3;
+                    settings.countdownOvertime = countdownOvertime;
+                    settings.countdownPhase = countdownPhase;
+                    storeSettings();
                     updateUX(false);
                     break;
                 case 1: //Counting down phase
-                    if ((clock.getTime() - 1000) >= 946681200000){ //do not count below zero
+                    if ((clock.getTime() - 1000) >= zeroTimer.getTime()){ //do not count below zero
                         clock = new Date(clock.getTime() - 1000);
                         countdownOvertime = false;
+                        settings.countdownOvertime = countdownOvertime;
                     }  else {
                         clock = new Date(clock.getTime() + 1000)    //when changing to phase 2 (counting upwards) we need to add a second to the clock, otherwise we skip a second! (zero will be displayed twice)
                         countdownOvertime = true;
                         countdownPhase = 2;
+                        settings.countdownOvertime = countdownOvertime;
+                        settings.countdownPhase = countdownPhase;
+                        storeSettings();
                         updateUX(false);
                     }                 
                     break;
@@ -598,11 +661,26 @@ $(document).ready(function(){
 
 
 
-
+    const isClockOnlyMode = checkIfClockOnlyMode();
     loadSettings();
     updateUX(false); //initialize UX
     updateClock();  //updateClock for the first time to initialize the UX. Overrides the last line of updateUX()
-    setInterval(updateClock, 1000);
+    if (isClockOnlyMode){
+        loadSettings();
+        setInterval(() => {
+            const savedTime = localStorage.getItem("clockTime");
+            if (savedTime) {
+                clock = new Date(parseInt(savedTime));
+                updateClock(false);
+            }
+            // Check for UX updates
+            loadSettings();
+        }, 100);
+
+    } else {
+        setInterval(updateClock, 1000);
+    }
+    
     inactivityTimeout();
     console.log("Loading complete!")
 
@@ -612,7 +690,6 @@ $(document).ready(function(){
 
 
 })
-
 
 
 

@@ -1,25 +1,27 @@
 // Choose a cache name
-const cacheName = 'clockomatic-cache-v3.11.3';
+const cacheName = 'clockomatic-cache-v3.11.5';
 // List the files to precache
 const precacheResources = [
   '/',
-  '/index.html', 
-  '/stylesheet.css', 
-  '/main.js', 
   '/clockomaticscript.js',
   '/favicon.ico',
+  '/index.html',
+  '/site.webmanifest',
+  '/stylesheet.css',
   '/images/icons/android-chrome-192x192.png',
   '/images/icons/android-chrome-512x512.png',
   '/images/icons/apple-touch-icon.png',
+  '/images/icons/disable-fullscreen-hover.png',
+  '/images/icons/disable-fullscreen.png',
+  '/images/icons/enable-fullscreen-hover.png',
+  '/images/icons/enable-fullscreen.png',
   '/images/icons/favicon-16x16.png',
   '/images/icons/favicon-32x32.png',
   '/images/icons/favicon.ico',
-  '/images/icons/menu.png',
-  '/images/icons/enable-fullscreen.png',
-  '/images/icons/disable-fullscreen.png',
+  '/images/icons/link-icon-hover.png',
+  '/images/icons/link-icon.png',
   '/images/icons/menu-hover.png',
-  '/images/icons/enable-fullscreen-hover.png',
-  '/images/icons/disable-fullscreen-hover.png',
+  '/images/icons/menu.png',
   '/images/icons/mstile-150x150.png',
   '/images/logos/clock-o-matic-logo.png',
 ];
@@ -44,28 +46,31 @@ self.addEventListener('install', (event) => {
     (async () => {
       const cache = await caches.open(cacheName);
       console.log("[Service Worker] Caching all: app shell and content");
-      await cache.addAll(cache);
+      await filesUpdate(cache);
     })(),
   );
 });
 
-// Activate event: clean up old caches
+// Activate event: clean up old caches and takes control of the page. Forces an update if available.
 self.addEventListener('activate', (event) => {
   console.log('[Service Worker] Activate');
   event.waitUntil(
-    caches.keys().then((keyList) =>
-      Promise.all(keyList.map((key) => {
-        if (key !== cacheName) {
-          console.log('[ServiceWorker] Removing old cache:', key);
-          return caches.delete(key);
-        }
-      }))
-    )
+    caches.keys().then((keyList) => {
+      return Promise.all(
+        keyList.map((key) => {
+          if (key !== cacheName) {
+            console.log('[ServiceWorker] Removing old cache:', key);
+            return caches.delete(key);
+          }
+        })
+      );
+    })
   );
+  // Force the service worker to take control of the page immediately
   return self.clients.claim();
-
-
 });
+
+
 
 // When there's an incoming fetch request, try and respond with a precached resource, otherwise fall back to the network
 self.addEventListener("fetch", (event) => {

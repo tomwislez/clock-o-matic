@@ -83,6 +83,16 @@ a{
 #menuFullscreenDisable:hover{
     background-image: url("./images/icons/disable-fullscreen-hover.png");
 }
+#menuOpenClockOnly{
+    background-image: url("./images/icons/link-icon.png");
+}
+#menuOpenClockOnly:hover{
+    background-image: url("./images/icons/link-icon-hover.png");
+}
+
+
+
+
 
 .menu-button {
     background-size: contain;
@@ -100,6 +110,15 @@ a{
     width: auto;
     color: white;
     font-size: 10px;;
+}
+
+#other-projects-icon{
+    background-image: url("./images/icons/link-icon.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 1px;
+    width: 10px;
+    height: 10px;
 }
 
 
@@ -157,3 +176,12 @@ a{
     color:black;
     background-color: darkgray;
 }
+
+
+/*hides controls and menu when used in a second screen*/
+.clock-only-mode #controls,
+.clock-only-mode #menuSettings,
+.clock-only-mode #menuOpenClockOnly {
+    display: none !important;
+}
+
